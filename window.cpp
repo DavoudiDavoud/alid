@@ -1,30 +1,8 @@
 #include "window.h"
 #include "adcreader.h"
 
-//#include <cmath>  // for sine stuff
-//double max=0.0;
-
-Window::Window() : func(0),count(0)
+Window::Window()
 {
-	
-	knob = new QwtKnob;
-	// set up the gain knob 
-	knob->setValue(0);
-
-	// use the Qt signals/slots framework to update the gain -
-	// every time the knob is moved, the setFunc function will be called
-	connect( knob, SIGNAL(valueChanged(double)), SLOT(setFunc(double)) );
-
-	// set up the thermometer
-        //thr=new QPushButton;
-	//thr->setText(tr("Threshold"));
-	//thr->show();
-//        m_label = new QwtTextLabel;
-//	m_label->setText("Max: ");
-//	m_label->show();
-//	m1_label= new QwtTextLabel;
-//	m1_label->setText("0");
-//	m1_label->show();
 
 	// set up the initial plot data
 	for( int index=0; index<plotDataSize; ++index )
@@ -43,25 +21,14 @@ Window::Window() : func(0),count(0)
 	plot->show();
 
 
-	// set up the layout - knob above thermometer
-	vLayout = new QVBoxLayout;
-	vLayout->addWidget(knob);
-//	vLayout->addWidget(m_label);
-//	vLayout->addWidget(m1_label);
-//	vLayout->addWidget(thermo);
 
 	// plot to the left of knob and thermometer
 	hLayout = new QHBoxLayout;
-	hLayout->addLayout(vLayout);
 	hLayout->addWidget(plot);
 
 	setLayout(hLayout);
 
-	// This is a demo for a thread which can be
-	// used to read from the ADC asynchronously.
-	// At the moment it doesn't do anything else than
-	// running in an endless loop and which prints out "tick"
-	// every second.
+
 	adcreader = new ADCreader();
 	adcreader->start();
 }
@@ -91,14 +58,8 @@ void Window::timerEvent( QTimerEvent * )
 		curve->setSamples(xData, yData, plotDataSize);
 		plot->replot();
 	}
-	// set the thermometer value
-	//thermo->setValue( inVal + 20 );
+
 }
 
 
-// this function can be used to change the gain of the A/D internal amplifier
-void Window::setFunc(double func)
-{
-	// for example purposes just change the amplitude of the generated input
-	this->func = func;
-}
+
